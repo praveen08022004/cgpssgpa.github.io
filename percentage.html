@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA to Percentage Converter</title>
+        <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="converter">
+<div class="container">
+    <h1>CGPA to Percentage Converter</h1>
+    <label for="cgpa" class="inputtext">Enter CGPA:</label>
+    <input type="number" id="cgpa" step="0.01" min="0" max="10" placeholder="Enter your CGPA">
+    <br>
+    <label for="name" class="inputname">Name:</label>
+    <br>
+    <input type="text" id="name" max="25" placeholder="enter your name">
+    <button onclick="convertToPercentage()">Convert</button>
+
+    <p id="result"></p>
+</div>
+</div>
+<script>
+    function convertToPercentage() {
+        var cgpa = document.getElementById('cgpa').value;
+        var name = document.getElementById('name').value;
+        if (cgpa === "" || cgpa < 0 || cgpa > 10) {
+            document.getElementById('result').innerHTML = "Please enter a valid CGPA between 0 and 10.";
+        } else {
+            var percentage = (cgpa * 10).toFixed(2);  // Typically, CGPA * 9.5 is the formula used
+            document.getElementById('result').innerHTML =  "Congratulations!! "+name + "\n" +
+            "Your percentage is: " + percentage + "%";
+        }
+    }
+</script>
+</body>
+</html>
