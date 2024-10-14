@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 400vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+
+    
+        label {
+            margin-top: 10px;
+            display: block;
+            color: #555555;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .subject-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background-color: #8CD867;
+        }
+        .subject-container h3 {
+            margin-top: 0;
+            color: #444444;
+        }
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            button {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+
+        #buttong
+        {
+            margin-left: 25vh;
+            margin-top: 1vh;
+        }
+
+        #submitBtn {
+            background-color: #FF934F;
+            color: #333333;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Input for Number of Subjects -->
+         <div class="maincontainer">
+            <h2>SGPA Calculator</h2>
+        <label for="subjectCount">Number of Subjects:</label>
+        <input type="number" id="subjectCount" min="1" placeholder="Enter number of subjects" required>
+        <button onclick="generateSubjectInputs()" id="buttong">Generate</button>
+        </div>
+
+        <!-- Placeholder for Dynamically Generated Subject Inputs -->
+        <div id="subjectInputs"></div>
+
+        <!-- Button to Submit Grade Points and Credits -->
+        <div class="buttons">
+            <button onclick="submitData()" style="display:none;" id="submitBtn">Submit</button>
+        </div>
+    </div>
+
+    <script>
+        function generateSubjectInputs() {
+            const subjectCount = parseInt(document.getElementById('subjectCount').value);
+            const subjectInputs = document.getElementById('subjectInputs');
+
+            // Validate input
+            if (isNaN(subjectCount) || subjectCount < 1) {
+                alert('Please enter a valid number of subjects.');
+                return;
+            }
+
+            // Clear any existing input fields
+            subjectInputs.innerHTML = '';
+
+            // Generate input boxes for each subject
+            for (let i = 1; i <= subjectCount; i++) {
+                const subjectDiv = document.createElement('div');
+                subjectDiv.className = 'subject-container';
+
+                const subjectHeader = document.createElement('h3');
+                subjectHeader.textContent = `Subject ${i}`;
+                subjectDiv.appendChild(subjectHeader);
+
+                // Grade Points Input
+                const gradeLabel = document.createElement('label');
+                gradeLabel.setAttribute('for', `grade${i}`);
+                gradeLabel.textContent = `Enter Grade`;
+                subjectDiv.appendChild(gradeLabel);
+
+                const gradeInput = document.createElement('input');
+                gradeInput.type = 'number';
+                gradeInput.id = `grade${i}`;
+                gradeInput.min = '0';
+                gradeInput.max = '10';
+                gradeInput.placeholder = `Enter Grade for Subject ${i}`;
+                gradeInput.required = true;
+                subjectDiv.appendChild(gradeInput);
+
+                // Credits Input
+                const creditsLabel = document.createElement('label');
+                creditsLabel.setAttribute('for', `credits${i}`);
+                creditsLabel.textContent = `Enter Credit`;
+                subjectDiv.appendChild(creditsLabel);
+
+                const creditsInput = document.createElement('input');
+                creditsInput.type = 'number';
+                creditsInput.id = `credits${i}`;
+                creditsInput.min = '1';
+                creditsInput.placeholder = `Enter Credits for Subject ${i}`;
+                creditsInput.required = true;
+                subjectDiv.appendChild(creditsInput);
+
+                // Append the subjectDiv to subjectInputs
+                subjectInputs.appendChild(subjectDiv);
+            }
+
+            // Display the submit button
+            document.getElementById('submitBtn').style.display = 'inline-block';
+        }
+
+        function submitData() {
+            const subjectCount = parseInt(document.getElementById('subjectCount').value);
+            let subjects = [];
+
+            // Validate subjectCount
+            if (isNaN(subjectCount) || subjectCount < 1) {
+                alert('Please enter a valid number of subjects.');
+                return;
+            }
+
+            // Collect grade points and credits for each subject
+            for (let i = 1; i <= subjectCount; i++) {
+                const gradePoints = parseFloat(document.getElementById(`grade${i}`).value);
+                const credits = parseFloat(document.getElementById(`credits${i}`).value);
+
+                // Validate grade points and credits
+                if (isNaN(gradePoints) || gradePoints < 0 || gradePoints > 10) {
+                    alert(`Please enter valid grade points for Subject ${i} (0-10).`);
+                    return;
+                }
+                if (isNaN(credits) || credits < 1) {
+                    alert(`Please enter valid credits for Subject ${i} (minimum 1).`);
+                    return;
+                }
+
+                subjects.push({ gradePoints, credits });
+            }
+
+            console.log('Subjects Data:', subjects);
+            // Calculate SGPA
+            calculateSGPA(subjects);
+        }
+
+        function calculateSGPA(subjects) {
+            let totalPoints = 0;
+            let totalCredits = 0;
+
+            subjects.forEach(subject => {
+                totalPoints += subject.gradePoints * subject.credits;
+                totalCredits += subject.credits;
+            });
+
+            const sgpa = (totalPoints / totalCredits).toFixed(2);
+            alert(`Your SGPA is: ${sgpa}`);
+        }
+    </script>
+</body>
+</html>

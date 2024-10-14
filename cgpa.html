@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 200vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+            color: #555555;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .sem-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background-color: #8cd867;
+        }
+        .sem-container h3 {
+            margin-top: 0;
+            color: #444444;
+        }
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            button {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+
+        
+
+       #submitBtn {
+            background-color: #FF934F;
+            color: #333333;
+            font-weight: 700;
+        } 
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>SGPA Calculator</h2>
+        
+        <!-- Input for Number of Semesters -->
+        <label for="semCount">Number of Semesters:</label>
+        <input type="number" id="semCount" min="1" placeholder="Enter number of semesters" required>
+        <button onclick="generateSgpaInputs()" class="buttong">Generate</button>
+
+        <!-- Placeholder for Dynamically Generated Subject Inputs -->
+        <div id="semInputs"></div>
+
+        <!-- Button to Submit Grade Points and Credits -->
+        <div class="buttons">
+            <button onclick="submitData()" style="display:none;" id="submitBtn">Submit</button>
+        </div>
+    </div>
+
+    <script>
+        function generateSgpaInputs() {
+            const semCount = parseInt(document.getElementById('semCount').value);
+            const semInputs = document.getElementById('semInputs');
+
+            // Validate input
+            if (isNaN(semCount) || semCount < 1) {
+                alert('Please enter a valid number of semesters.');
+                return;
+            }
+
+            // Clear any existing input fields
+            semInputs.innerHTML = '';
+
+            // Generate input boxes for each subject
+            for (let i = 1; i <= semCount; i++) {
+                const semDiv = document.createElement('div');
+                semDiv.className = 'sem-container';
+
+                const semHeader = document.createElement('h3');
+                semHeader.textContent = `Sem ${i}`;
+                semDiv.appendChild(semHeader);
+
+                // Grade Points Input
+                const semLabel = document.createElement('label');
+                semLabel.setAttribute('for', `sem${i}`);
+                semDiv.appendChild(semLabel);
+
+                const semInput = document.createElement('input');
+                semInput.type = 'number';
+                semInput.id = `sem${i}`;
+                semInput.min = '0';
+                semInput.max = '10';
+                semInput.placeholder = `Enter the sgpa`;
+                semInput.required = true;
+                semDiv.appendChild(semInput);
+
+                // Append the subjectDiv to subjectInputs
+                semInputs.appendChild(semDiv);
+            }
+
+            // Display the submit button
+            document.getElementById('submitBtn').style.display = 'inline-block';
+        }
+
+        function submitData() {
+            const semCount = parseInt(document.getElementById('semCount').value);
+            let sems = [];
+
+            // Validate subjectCount
+            if (isNaN(semCount) || semCount < 1) {
+                alert('Please enter a valid number of semesters.');
+                return;
+            }
+
+            // Collect grade points and credits for each subject
+            for (let i = 1; i <= semCount; i++) {
+                const semester = parseFloat(document.getElementById(`sem${i}`).value);
+
+                // Validate grade points and credits
+                if (isNaN(semester) || semester < 0 || semester > 10) {
+                    alert(`Please enter valid semesters  ${i} (0-10).`);
+                    return;
+                }
+
+                sems.push({ semester});
+            }
+
+            console.log('Sem Data:', sems);
+            // Calculate CGPA
+            calculateCGPA(sems);
+        }
+
+        function calculateCGPA(sems) {
+            let scoredsgpa = 0;
+            let semCount = sems.length;
+
+            sems.forEach(sem => {
+                scoredsgpa += sem.semester;
+            });
+
+            const cgpa = ((scoredsgpa / semCount)).toFixed(2);
+            alert(`Your CGPA is: ${cgpa}`);
+        }
+    </script>
+</body>
+</html>
